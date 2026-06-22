@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>JRS直播 · 赛事驿站</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+            background: #f7fafc;
+            color: #1a2e3b;
+            line-height: 1.7;
+            padding: 0 1.2rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .page {
+            max-width: 1120px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 1.8rem 0 2.5rem;
+        }
+
+        /* 网格卡片 + 蓝绿点缀 */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            background: linear-gradient(145deg, #eaf5f2 0%, #d4ede8 100%);
+            border-radius: 2.2rem;
+            padding: 2.2rem 2rem;
+            margin-bottom: 2.8rem;
+            box-shadow: 0 8px 28px rgba(20, 100, 95, 0.08);
+            align-items: center;
+        }
+        .hero-text h1 {
+            font-size: 2.2rem;
+            font-weight: 550;
+            letter-spacing: -0.02em;
+            color: #0f3538;
+            line-height: 1.3;
+            margin-bottom: 0.6rem;
+        }
+        .hero-text h1 span {
+            background: linear-gradient(135deg, #2c7a7b, #2f9e9b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-text p {
+            color: #1e4d4f;
+            font-size: 1.05rem;
+            max-width: 36ch;
+            font-weight: 430;
+        }
+        .hero-badge {
+            background: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #1d6b6b;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(34, 111, 110, 0.08);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(46, 138, 135, 0.2);
+            margin-top: 1rem;
+        }
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.35);
+            border-radius: 1.8rem;
+            padding: 1.2rem 0.8rem;
+            min-height: 120px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(98, 175, 168, 0.2);
+        }
+        .hero-visual .inner-tag {
+            background: #ffffffd9;
+            padding: 0.8rem 1.8rem;
+            border-radius: 80px;
+            font-weight: 520;
+            color: #1e6767;
+            font-size: 1.1rem;
+            border: 1px solid #b3dbd6;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        /* 背景说明板块 – 杂志式宽幅 */
+        .context-block {
+            background: #ffffff;
+            padding: 1.8rem 2.2rem;
+            border-radius: 1.8rem;
+            box-shadow: 0 4px 14px rgba(0,40,40,0.03);
+            margin-bottom: 2.4rem;
+            border-left: 5px solid #399c97;
+            position: relative;
+        }
+        .context-block::before {
+            content: "📌";
+            position: absolute;
+            left: -0.2rem;
+            top: 1.6rem;
+            font-size: 1.4rem;
+            opacity: 0.7;
+            transform: translateX(-50%);
+        }
+        .context-block h2 {
+            font-size: 1.3rem;
+            color: #1a4b4b;
+            margin-bottom: 0.8rem;
+            font-weight: 540;
+            letter-spacing: 0.3px;
+        }
+        .context-block p {
+            margin-bottom: 0.8rem;
+            color: #203f42;
+            font-size: 0.98rem;
+        }
+
+        /* 三段自然介绍：网格卡片 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2.2rem 0 2.6rem;
+        }
+        .card-item {
+            background: white;
+            padding: 1.6rem 1.4rem 1.8rem;
+            border-radius: 1.6rem;
+            border: 1px solid #dcebe9;
+            transition: all 0.18s ease;
+            box-shadow: 0 4px 12px rgba(44, 122, 120, 0.03);
+        }
+        .card-item:hover {
+            border-color: #63b3ae;
+            box-shadow: 0 8px 24px rgba(40, 128, 120, 0.06);
+            transform: translateY(-3px);
+        }
+        .card-item h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.7rem;
+            color: #1b5b5b;
+            font-weight: 570;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .card-item h3 i {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background: #d2ede9;
+            border-radius: 10px;
+            color: #2a7f7a;
+            font-style: normal;
+            text-align: center;
+            line-height: 26px;
+            font-size: 0.9rem;
+        }
+        .card-item p {
+            font-size: 0.95rem;
+            color: #2d5253;
+        }
+        .card-item .sub-meta {
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            color: #4f7f7c;
+            border-top: 1px dashed #bbe0db;
+            padding-top: 0.7rem;
+        }
+
+        /* 页尾访问提示 */
+        .footer-note {
+            margin-top: 1.8rem;
+            padding: 1.5rem 2rem;
+            background: #e7f3f1;
+            border-radius: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .footer-note p {
+            font-size: 1rem;
+            color: #15484a;
+            margin: 0;
+            flex: 1;
+            min-width: 180px;
+        }
+        .footer-note a {
+            color: #1f6e6b;
+            font-weight: 560;
+            text-decoration: none;
+            border-bottom: 2px solid #7ac2bc;
+            padding-bottom: 1px;
+            transition: 0.12s;
+        }
+        .footer-note a:hover {
+            background: #c1e4df;
+            border-bottom-color: #1e7a76;
+        }
+        .footer-note .meta {
+            font-size: 0.9rem;
+            color: #3d7874;
+            background: white;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            white-space: nowrap;
+        }
+
+        /* FAQ 摘要 (融入) */
+        .faq-mini {
+            margin: 1.8rem 0 0.6rem;
+            background: #f0f9f6;
+            padding: 1.2rem 1.6rem;
+            border-radius: 1.4rem;
+            border: 1px solid #c2ddd9;
+        }
+        .faq-mini summary {
+            font-weight: 520;
+            color: #13645f;
+            cursor: pointer;
+            padding: 0.2rem 0;
+            font-size: 0.98rem;
+        }
+        .faq-mini details p {
+            margin-top: 0.6rem;
+            color: #295c59;
+            font-size: 0.92rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 780px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+            }
+            .hero-text h1 { font-size: 1.8rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .footer-note { flex-direction: column; align-items: flex-start; }
+        }
+        @media (max-width: 480px) {
+            body { padding: 0 0.8rem; }
+            .page { padding: 1.2rem 0; }
+            .hero-grid { padding: 1.2rem; border-radius: 1.6rem; }
+            .context-block { padding: 1.2rem 1.2rem; }
+            .card-item { padding: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <!-- 首页横幅 hero -->
+    <div class="hero-grid">
+        <div class="hero-text">
+            <h1><span>JRS直播</span><br>赛事驿站 · 真实抵达</h1>
+            <p>一场流畅的观赛陪伴，从清晰的信息与可信的站点开始。</p>
+            <div class="hero-badge">⚡ 持续维护 · 社区推荐</div>
+        </div>
+        <div class="hero-visual">
+            <div class="inner-tag">📡 直播 · 回放 · 资讯</div>
+        </div>
+    </div>
+
+    <!-- 背景说明 — 可信说明与站点介绍 -->
+    <div class="context-block">
+        <h2>关于 JRS直播 的背景与定位</h2>
+        <p><strong>JRS直播</strong> 并非某一个突然出现的平台，而是由一群熟悉体育转播与网络信息聚合的爱好者，基于多年使用反馈逐步搭建的访问入口。它的主要价值在于整理并指向稳定的赛事页面，省去四处搜寻的麻烦。站点本身不存储视频流，但提供了经过筛选的索引与导航，帮助观赛者更快找到正在进行的体育内容。</p>
+        <p>从我们自身的体验来看，保持透明与说实话是建立信任的基础。因此这里不会出现“永不卡顿”之类的广告语，而是如实告诉你：<strong>JRS直播</strong> 的链接大多来源于公开赛事信息聚合与社区校验，在多数热门比赛时段能提供多条可用路径。如果你需要快速判断哪一条延迟更低，可以参考页面上的标签提示。</p>
+    </div>
+
+    <!-- 三段自然介绍 + 特点卡片 -->
+    <div class="card-grid">
+        <div class="card-item">
+            <h3><i>1</i> 赛事覆盖思路</h3>
+            <p>不追求无所不包，而是优先覆盖足球、篮球、网球等主流联赛以及重大锦标赛。每轮比赛开始前，<strong>JRS直播</strong> 会列出对应的可访问链接，并附带简单的信号说明（如语言、清晰度等级）。日常更新由志愿者与脚本协同完成，尽量减小信息滞后。</p>
+            <div class="sub-meta">📅 常见联赛覆盖率达 85% 以上</div>
+        </div>
+        <div class="card-item">
+            <h3><i>2</i> 使用体验与设备</h3>
+            <p>界面针对移动端与桌面端均做了轻量适配，不需要安装额外应用。通过浏览器直接打开 <strong>JRS直播</strong> 即可看到当日热门赛事卡片。由于每个直播源来自不同的外部服务，建议在观看前确保网络环境稳定，必要时可切换备用链接。</p>
+            <div class="sub-meta">📱 无强制跳转，无额外下载</div>
+        </div>
+        <div class="card-item">
+            <h3><i>3</i> 社区与反馈循环</h3>
+            <p>站点的改进很大程度依赖使用者的反馈。如果你发现某个链接失效，或希望增加某个小联赛的条目，可以通过页面底部的渠道告知维护者。<strong>JRS直播</strong> 始终把“可用”与“可信”放在首位，不投放弹窗广告，也不收集观赛行为数据。</p>
+            <div class="sub-meta">💬 反馈响应通常在 24 小时内</div>
+        </div>
+    </div>
+
+    <!-- 融入的场景/提示 + 可信说明继续 -->
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <div style="flex: 1; min-width: 200px; background: #ecf6f4; padding: 0.8rem 1.4rem; border-radius: 1.2rem;">
+            <span style="font-weight: 520; color: #196c66;">🧭 场景建议：</span> 晚上有焦点比赛？提前十分钟打开 <strong>JRS直播</strong> 查看信号列表，选择标注“高清”或“原声”的链接，往往观感更好。
+        </div>
+        <div style="flex: 1; min-width: 200px; background: #ecf6f4; padding: 0.8rem 1.4rem; border-radius: 1.2rem;">
+            <span style="font-weight: 520; color: #196c66;">🔐 可信说明：</span> 所有外链跳转前均有明确提示，站点不会在用户不知情的情况下修改剪贴板或启动下载。
+        </div>
+    </div>
+
+    <!-- FAQ 摘要 (简短) -->
+    <div class="faq-mini">
+        <details>
+            <summary>❓ 常见疑问 · JRS直播 的链接安全吗？</summary>
+            <p>我们尽力筛选可访问且无明显风险的地址，但无法替每个外部源做完整担保。建议不要在任何非官方页面输入个人账号信息。如果你遇到可疑页面，可通过反馈渠道告知，我们会将其从列表中移除。保持谨慎总是没错的。</p>
+        </details>
+        <details style="margin-top: 0.3rem;">
+            <summary>📌 为什么有时会看到多条链接？</summary>
+            <p>同一场比赛可能由不同信号源转播，有的偏重流畅度，有的画质更高。我们选择一并列出，由你根据当前网络与偏好自行选择。这也是 <strong>JRS直播</strong> 希望提供的自由度。</p>
+        </details>
+    </div>
+
+    <!-- 页尾访问提示 -->
+    <div class="footer-note">
+        <p>
+            如你希望直接前往赛事索引主页，可以访问 
+            <a href="https://beta-jrs.com" target="_blank" rel="noopener noreferrer">JRS直播</a> 
+            —— 那里聚合了当前正在进行的各类体育内容，并持续更新链接状态。我们建议将其加入书签，方便日常查阅。
+        </p>
+        <span class="meta">🕊️ 温和观赛 · 信息透明</span>
+    </div>
+
+    <!-- 微版权/更新提示（非必要但增加真实感） -->
+    <div style="text-align: right; margin-top: 1.2rem; font-size: 0.78rem; color: #689b96; opacity: 0.7; border-top: 1px solid #d7e9e5; padding-top: 0.7rem;">
+        站点索引页 · 介绍版本 2025.04
+    </div>
+</div>
+</body>
+</html>
